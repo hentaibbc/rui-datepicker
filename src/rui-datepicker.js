@@ -5,7 +5,7 @@
  @Author：羯瑞
  @Site：https://github.com/chenruifu/rui-datepicker
  @License：MIT
-    
+
  */
 
 window.ruiDatepicker = (function() {
@@ -18,32 +18,32 @@ window.ruiDatepicker = (function() {
                     return function(value) {
                         var classes = self.className.split(/\s+/g),
                             index = classes.indexOf(value);
-                        
+
                         fn(classes, index, value);
                         self.className = classes.join(" ");
                     }
                 }
-                
-                return {                    
+
+                return {
                     add: update(function(classes, index, value) {
                         if (!~index) classes.push(value);
                     }),
-                    
+
                     remove: update(function(classes, index) {
                         if (~index) classes.splice(index, 1);
                     }),
-                    
+
                     toggle: update(function(classes, index, value) {
                         if (~index)
                             classes.splice(index, 1);
                         else
                             classes.push(value);
                     }),
-                    
+
                     contains: function(value) {
                         return !!~self.className.split(/\s+/g).indexOf(value);
                     },
-                    
+
                     item: function(i) {
                         return self.className.split(/\s+/g)[i] || null;
                     }
@@ -56,13 +56,22 @@ window.ruiDatepicker = (function() {
 		this.minY = 1940;
 		this.minM = 1,
 		this.minD = 1,
-		this.maxY = 2020,
+		// this.maxY = 2020,
 		this.maxM = 12,
 		this.maxD = 31,
-		this.type = 1 //0公历，1农历
+		this.type = 0; //0公历，1农历
+
+		this.options = {};
+		this.options.enableUnknownHour = false;
+		this.maxY = Math.min((new Date().getFullYear()) + 1, 2030);
 	}
 	datePicker.prototype = {
-		init: function(id) {
+		init: function(id, options) {
+			options = options || {};
+			Object.keys(options).forEach(function (k) {
+				datePicker.options[k] = options[k];
+			});
+
 			this.trigger = document.querySelector(id);
 			this.bindEvent('date');
 		},
@@ -283,13 +292,13 @@ window.ruiDatepicker = (function() {
 				// 阻止透视滑动
 				_self.gearDate.addEventListener("touchmove",function(e){ e.preventDefault(); });
 				// 阻止鼠标滚轮事件
-				if(navigator.userAgent.indexOf("Firefox")>0){ 
-			        _self.gearDate.addEventListener('DOMMouseScroll',function(e){e.preventDefault();},false); 
+				if(navigator.userAgent.indexOf("Firefox")>0){
+			        _self.gearDate.addEventListener('DOMMouseScroll',function(e){e.preventDefault();},false);
 			        date_yy.addEventListener('DOMMouseScroll', gearMouseRolling , false);
 					date_mm.addEventListener('DOMMouseScroll', gearMouseRolling , false);
-					date_dd.addEventListener('DOMMouseScroll', gearMouseRolling , false); 
-					date_hh?date_hh.addEventListener('DOMMouseScroll', gearMouseRolling , false):''; 
-			    }else{ 
+					date_dd.addEventListener('DOMMouseScroll', gearMouseRolling , false);
+					date_hh?date_hh.addEventListener('DOMMouseScroll', gearMouseRolling , false):'';
+			    }else{
 			        _self.gearDate.onmousewheel = function(e){ return false};
 			        date_yy.onmousewheel=gearMouseRolling;
 					date_mm.onmousewheel=gearMouseRolling;
@@ -561,7 +570,11 @@ window.ruiDatepicker = (function() {
 				var date_hh = _self.gearDate.querySelector(".date_hh");
 				if (date_hh && date_hh.getAttribute("val")) {
 					var hhVal = parseInt(date_hh.getAttribute("val"));
-					itemStr = "<div class='tooth'>未知</div>";
+					if (datePicker.options.enableUnknownHour) {
+						itemStr = "<div class='tooth'>未知</div>";
+					} else {
+						itemStr = "";
+					}
 					for (var p = 0; p < 24; p++) {
 						var strVal=_self.type?getChinese('hh',p):p;
 						itemStr += "<div class='tooth'>" + strVal + "时</div>";
@@ -635,7 +648,7 @@ window.ruiDatepicker = (function() {
 			    var SolarDays = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365, 396,0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366, 397];
 
 			    //公历转农历
-			    if (M == 0) {  
+			    if (M == 0) {
 			        var SolarYear = parseInt(year);
 			        var SolarMonth = parseInt(month);
 			        var SolarDate = parseInt(date);
@@ -724,7 +737,7 @@ window.ruiDatepicker = (function() {
 			        }
 			        // return SolarYear + "-" + SolarMonth + "-" + SolarDate;
 			        return {yy:SolarYear,mm:SolarMonth,dd:SolarDate};
-			    }    
+			    }
 			}
 			/* 闰年, 返回 0 平年, 1 闰年 */
 			function GetLeap(year) {
@@ -851,7 +864,7 @@ window.ruiDatepicker = (function() {
 	            	//阻止点击
 	            	if(!mousedownTip){
 	            		document.onmousemove=null;
-	                	document.onmouseup=null; 
+	                	document.onmouseup=null;
 	            		return false;
 	            	}
 	            	e = e || window.event;
@@ -881,7 +894,7 @@ window.ruiDatepicker = (function() {
 					}
 					rollGear(target);
 	                document.onmousemove=null;
-	                document.onmouseup=null; 
+	                document.onmouseup=null;
 				}
 			}
 			//触摸开始
@@ -1078,7 +1091,11 @@ window.ruiDatepicker = (function() {
 							}
 							break;
 						case "date_hh":
-							var minTop = 8 - (25 - 1) * 2;
+							if (datePicker.options.enableUnknownHour) {
+								var minTop = 8 - (25 - 1) * 2;
+							} else {
+								var minTop = 8 - (24 - 1) * 2;
+							}
 							if (pos < minTop) {
 								pos = minTop;
 								stopGear = true;
@@ -1193,7 +1210,7 @@ window.ruiDatepicker = (function() {
 				}
 				closeMobileCalendar(e,'finish');
 			}
-			//设置顶部日期+设置确认框数据+返回对象 _yy 农历年  yy公历年   
+			//设置顶部日期+设置确认框数据+返回对象 _yy 农历年  yy公历年
 			function getCalendarDate(){
 				var passY = _self.maxY - _self.minY + 1;
 				var val_yy = parseInt(Math.round(_self.gearDate.querySelector(".date_yy").getAttribute("val")));
