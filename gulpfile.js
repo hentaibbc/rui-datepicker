@@ -68,7 +68,7 @@ gulp.task('jsmin', () => {
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(header('/*! <%= pkg.realname %>-v<%= pkg.version %> <%= pkg.description %> <%= pkg.license %> License  <%= pkg.homepage %>  By <%= pkg.author %> */\n ;', {pkg: pkg}))
+        // .pipe(header('/*! <%= pkg.realname %>-v<%= pkg.version %> <%= pkg.description %> <%= pkg.license %> License  <%= pkg.homepage %>  By <%= pkg.author %> */\n ;', {pkg: pkg}))
         .pipe(gulp.dest('dist'))
 });
 
