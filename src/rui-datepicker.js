@@ -9,6 +9,9 @@
  */
 
 window.ruiDatepicker = (function() {
+    var FIRSTYEAR = 1920;//最小年份
+    var LASTYEAR = 2030;//最大年份
+
 	// 兼容IE-classList处理
 	if (!("classList" in document.documentElement)) {
         Object.defineProperty(HTMLElement.prototype, 'classList', {
@@ -53,7 +56,7 @@ window.ruiDatepicker = (function() {
     }
 	var datePicker = function() {
 		this.gearDate;
-		this.minY = 1940;
+		this.minY = FIRSTYEAR;
 		this.minM = 1,
 		this.minD = 1,
 		// this.maxY = 2020,
@@ -69,16 +72,40 @@ window.ruiDatepicker = (function() {
 		init: function(id, options) {
 			options = options || {};
 			Object.keys(options).forEach(function (k) {
-				datePicker.options[k] = options[k];
+				_self.options[k] = options[k];
 			});
 
-			this.trigger = document.querySelector(id);
+			if (id instanceof Element) {
+				this.trigger = id;
+			} else {
+				this.trigger = document.querySelector(id);
+			}
 			this.bindEvent('date');
 		},
 		bindEvent: function(type) {
 			var _self = this;
 			// 农历数据
 		    var LunarCal = [
+                new tagLunarCal(50, 0, 3, 53, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1), /* 1920 */
+                new tagLunarCal(38, 0, 5, 59, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1), /* 1921 */
+                new tagLunarCal(27, 5, 6, 4, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1), /* 1922 */
+                new tagLunarCal(46, 0, 0, 9, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0), /* 1923 */
+                new tagLunarCal(35, 0, 1, 14, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1), /* 1924 */
+                new tagLunarCal(23, 4, 3, 20, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1), /* 1925 */
+                new tagLunarCal(43, 0, 4, 25, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1), /* 1926 */
+                new tagLunarCal(32, 0, 5, 30, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0), /* 1927 */
+                new tagLunarCal(22, 2, 6, 35, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1), /* 1928 */
+                new tagLunarCal(40, 0, 1, 41, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0), /* 1929 */
+                new tagLunarCal(29, 6, 2, 46, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0), /* 1930 */
+                new tagLunarCal(47, 0, 3, 51, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1), /* 1931 */
+                new tagLunarCal(36, 0, 4, 56, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0), /* 1932 */
+                new tagLunarCal(25, 5, 6, 2, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1), /* 1933 */
+                new tagLunarCal(44, 0, 0, 7, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0), /* 1934 */
+                new tagLunarCal(34, 0, 1, 12, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1), /* 1935 */
+                new tagLunarCal(23, 3, 2, 17, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0), /* 1936 */
+                new tagLunarCal(41, 0, 4, 23, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1), /* 1937 */
+                new tagLunarCal(30, 7, 5, 28, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1), /* 1938 */
+                new tagLunarCal(49, 0, 6, 33, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1), /* 1939 */
 		     	new tagLunarCal(38, 0, 0, 38, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1), /* 1940 */
 		     	new tagLunarCal(26, 6, 2, 44, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0),
 		     	new tagLunarCal(45, 0, 3, 49, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0),
@@ -169,7 +196,27 @@ window.ruiDatepicker = (function() {
 		     	new tagLunarCal(36, 0, 4, 15, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1),
 		     	new tagLunarCal(25, 5, 5, 20, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0), /* 2028 */
 		     	new tagLunarCal(43, 0, 0, 26, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1),
-		     	new tagLunarCal(32, 0, 1, 31, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0)
+                new tagLunarCal(32, 0, 1, 31, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0),
+                new tagLunarCal(23, 3, 2, 36, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0), /* 2031 */
+                new tagLunarCal(42, 0, 3, 41, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0), /* 2032 */
+                new tagLunarCal(31, 11, 5, 47, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1), /* 2033 */
+                new tagLunarCal(50, 0, 6, 52, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1), /* 2034 */
+                new tagLunarCal(39, 0, 0, 57, 1, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1), /* 2035 */
+                new tagLunarCal(28, 6, 1, 2, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1), /* 2036 */
+                new tagLunarCal(46, 0, 3, 8, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1), /* 2037 */
+                new tagLunarCal(35, 0, 4, 13, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1), /* 2038 */
+                new tagLunarCal(24, 5, 5, 18, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0), /* 2039 */
+                new tagLunarCal(43, 0, 6, 23, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0), /* 2040 */
+                new tagLunarCal(32, 0, 1, 29, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0), /* 2041 */
+                new tagLunarCal(22, 2, 2, 34, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1), /* 2042 */
+                new tagLunarCal(41, 0, 3, 39, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1), /* 2043 */
+                new tagLunarCal(30, 7, 4, 44, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1), /* 2044 */
+                new tagLunarCal(48, 0, 6, 50, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1), /* 2045 */
+                new tagLunarCal(37, 0, 0, 55, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1), /* 2046 */
+                new tagLunarCal(26, 5, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1), /* 2047 */
+                new tagLunarCal(45, 0, 2, 5, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1), /* 2048 */
+                new tagLunarCal(33, 0, 4, 11, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 0), /* 2049 */
+                new tagLunarCal(23, 3, 5, 16, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0) /* 2050 */
 		    ];
 			//呼出日期插件
 			function popupDate(e) {
@@ -384,7 +431,11 @@ window.ruiDatepicker = (function() {
 				if(_self.gearDate.querySelector(".date_hh")){
 					var hour_val=0;
 					if(_self.trigger.getAttribute('data-hour') && _self.trigger.getAttribute('data-hour')>=0){
-						hour_val=parseInt(Math.round(_self.trigger.getAttribute('data-hour'))+1);
+						if (_self.options.enableUnknownHour) {
+							hour_val=parseInt(Math.round(_self.trigger.getAttribute('data-hour'))+1);
+						} else {
+							hour_val=parseInt(Math.round(_self.trigger.getAttribute('data-hour')));
+						}
 					}
 					_self.gearDate.querySelector(".date_hh").setAttribute("val", hour_val);
 				}
@@ -570,14 +621,16 @@ window.ruiDatepicker = (function() {
 				var date_hh = _self.gearDate.querySelector(".date_hh");
 				if (date_hh && date_hh.getAttribute("val")) {
 					var hhVal = parseInt(date_hh.getAttribute("val"));
-					if (datePicker.options.enableUnknownHour) {
+					if (_self.options.enableUnknownHour) {
 						itemStr = "<div class='tooth'>未知</div>";
 					} else {
 						itemStr = "";
 					}
 					for (var p = 0; p < 24; p++) {
-						var strVal=_self.type?getChinese('hh',p):p;
-						itemStr += "<div class='tooth'>" + strVal + "时</div>";
+                        // var strVal=_self.type?getChinese('hh',p):p;
+                        var tmpHH = (p<10) ? '0'+p : ''+p;
+                        var strVal = tmpHH + ':00-' + tmpHH + ':59(' + getChinese('hhh',p) + ')';
+						itemStr += "<div class='tooth'><span style='display:inline-block;transform:scaleX(0.8)'>" + strVal + "</span></div>";
 					}
 					date_hh.innerHTML = itemStr;
 					date_hh.style["transform"] = 'translate(0,' + (8 - hhVal * 2) + 'em)';
@@ -621,10 +674,12 @@ window.ruiDatepicker = (function() {
 				var mmArr=['正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
 				var ddArr=['初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十','三十一'];
 				var hhArr=['0子','1丑','2丑','3寅','4寅','5卯','6卯','7辰','8辰','9巳','10巳','11午','12午','13未','14未','15申','16申','17酉','18酉','19戌','20戌','21亥','22亥','23子'];
+				var hhhArr=['子','丑','丑','寅','寅','卯','卯','辰','辰','巳','巳','午','午','未','未','申','申','酉','酉','戌','戌','亥','亥','子'];
 				if(type=='rm') return rmArr[num-1];
 				if(type=='mm') return mmArr[num-1];
 				if(type=='dd') return ddArr[num-1];
 				if(type=='hh') return hhArr[num];
+				if(type=='hhh') return hhhArr[num];
 			}
 			/**
 			 * 公历农历转换
@@ -638,8 +693,8 @@ window.ruiDatepicker = (function() {
 			    var month = date_mm;
 			    var date = date_dd;
 
-			    var FIRSTYEAR = 1940;//最小年份
-			    var LASTYEAR = 2030;//最大年份
+			    // var FIRSTYEAR = 1920;//最小年份
+			    // var LASTYEAR = 2030;//最大年份
 
 			    //西曆年每月之日數
 			    var SolarCal = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -1091,7 +1146,7 @@ window.ruiDatepicker = (function() {
 							}
 							break;
 						case "date_hh":
-							if (datePicker.options.enableUnknownHour) {
+							if (_self.options.enableUnknownHour) {
 								var minTop = 8 - (25 - 1) * 2;
 							} else {
 								var minTop = 8 - (24 - 1) * 2;
@@ -1128,7 +1183,9 @@ window.ruiDatepicker = (function() {
 			function closeMobileCalendar(e,type) {
 				var btnFinish=_self.gearDate.querySelector('.lcalendar_finish');
 				var btnCancel=_self.gearDate.querySelector('.lcalendar_cancel');
-				e.preventDefault();
+				try {
+					e.preventDefault();
+				} catch (err) {}
 				// 判断是否在等待确认状态
 				if(btnFinish.getAttribute('data-isconfirm')-0 && !type){
 					//设置日期
@@ -1220,7 +1277,11 @@ window.ruiDatepicker = (function() {
 				// 判断是否启用时辰
 				var hour_on=_self.gearDate.querySelector(".date_hh")?1:0;
 				if(hour_on){
-					var date_hh=parseInt(Math.round(_self.gearDate.querySelector(".date_hh").getAttribute("val"))) - 1;
+					if(_self.options.enableUnknownHour) {
+						var date_hh=parseInt(Math.round(_self.gearDate.querySelector(".date_hh").getAttribute("val"))) - 1;
+					} else {
+						var date_hh=parseInt(Math.round(_self.gearDate.querySelector(".date_hh").getAttribute("val")));
+					}
 				}
 				// 判断否有闰月
 				var rmNum=LunarCal[val_yy].Intercalation?LunarCal[val_yy].Intercalation:0;
