@@ -99,7 +99,7 @@ window.ruiDatepicker = (function() {
                 new tagLunarCal(29, 6, 2, 46, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0), /* 1930 */
                 new tagLunarCal(47, 0, 3, 51, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1), /* 1931 */
                 new tagLunarCal(36, 0, 4, 56, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0), /* 1932 */
-                new tagLunarCal(25, 5, 6, 2, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1), /* 1933 */
+                new tagLunarCal(25, 5, 6, 2, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1), /* 1933 */
                 new tagLunarCal(44, 0, 0, 7, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0), /* 1934 */
                 new tagLunarCal(34, 0, 1, 12, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1), /* 1935 */
                 new tagLunarCal(23, 3, 2, 17, 1, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0), /* 1936 */
@@ -630,7 +630,8 @@ window.ruiDatepicker = (function() {
                         // var strVal=_self.type?getChinese('hh',p):p;
                         var tmpHH = (p<10) ? '0'+p : ''+p;
                         var strVal = tmpHH + ':00-' + tmpHH + ':59(' + getChinese('hhh',p) + ')';
-						itemStr += "<div class='tooth'><span style='display:inline-block;transform:scaleX(0.8)'>" + strVal + "</span></div>";
+						itemStr += "<div class='tooth'>" + strVal + "</div>";
+						// itemStr += "<div class='tooth'><span style='display:inline-block;transform:scaleX(0.8);white-space:nowrap;'>" + strVal + "</span></div>";
 					}
 					date_hh.innerHTML = itemStr;
 					date_hh.style["transform"] = 'translate(0,' + (8 - hhVal * 2) + 'em)';

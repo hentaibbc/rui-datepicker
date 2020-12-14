@@ -50,14 +50,14 @@ gulp.task('dev', function() {
 // 压缩CSS
 gulp.task('cssmin', () => {
     return gulp.src('src/*.css')
-        .pipe(cssVer())
-        .pipe(cleanCSS({
-            //保留ie7及以下兼容写法
-            compatibility: 'ie7',
-            //保留所有特殊前缀
-            keepSpecialComments: '*'
-        }))
-        .pipe(autoprefixer())
+        // .pipe(cssVer())
+        // .pipe(cleanCSS({
+        //     //保留ie7及以下兼容写法
+        //     compatibility: 'ie7',
+        //     //保留所有特殊前缀
+        //     keepSpecialComments: '*'
+        // }))
+        // .pipe(autoprefixer())
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('dist'));
 });
