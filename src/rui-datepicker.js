@@ -477,7 +477,7 @@ window.ruiDatepicker = (function() {
 					var yyVal = parseInt(date_yy.getAttribute("val"));
 					//p 当前节点前后需要展示的节点个数
 					for (var p = 0; p <= passY - 1; p++) {
-						itemStr += "<div class='tooth'>" + (_self.minY + p) + "</div>";
+						itemStr += "<div class='tooth'>" + (_self.minY + p) + "年</div>";
 					}
 					date_yy.innerHTML = itemStr;
 					var top = Math.floor(parseFloat(date_yy.getAttribute('top')));
@@ -549,8 +549,10 @@ window.ruiDatepicker = (function() {
 							}else{
 								strVal=getChinese('mm',strVal);
 							}
+							itemStr += "<div class='tooth'>" + strVal + "</div>";
+						} else {
+							itemStr += "<div class='tooth'>" + strVal + "月</div>";
 						}
-						itemStr += "<div class='tooth'>" + strVal + "</div>";
 					}
 					date_mm.innerHTML = itemStr;
 					if (mmVal > maxM) {
@@ -598,7 +600,7 @@ window.ruiDatepicker = (function() {
 						}
 					}
 					for (var p = 0; p < maxD - minD + 1; p++) {
-						var strVal=_self.type?getChinese('dd',minD + p + 1):(minD + p + 1);
+						var strVal=_self.type?getChinese('dd',minD + p + 1):((minD + p + 1)+'日');
 						itemStr += "<div class='tooth'>" + strVal + "</div>";
 					}
 					date_dd.innerHTML = itemStr;
@@ -627,10 +629,11 @@ window.ruiDatepicker = (function() {
 						itemStr = "";
 					}
 					for (var p = 0; p < 24; p++) {
-                        // var strVal=_self.type?getChinese('hh',p):p;
-                        var tmpHH = (p<10) ? '0'+p : ''+p;
-                        var strVal = tmpHH + ':00-' + tmpHH + ':59(' + getChinese('hhh',p) + ')';
-						itemStr += "<div class='tooth'>" + strVal + "</div>";
+						var strVal=_self.type?getChinese('hh',p):p;
+						itemStr += "<div class='tooth'>" + strVal + "时</div>";
+                        // var tmpHH = (p<10) ? '0'+p : ''+p;
+                        // var strVal = tmpHH + ':00-' + tmpHH + ':59(' + getChinese('hhh',p) + ')';
+						// itemStr += "<div class='tooth'>" + strVal + "</div>";
 						// itemStr += "<div class='tooth'><span style='display:inline-block;transform:scaleX(0.8);white-space:nowrap;'>" + strVal + "</span></div>";
 					}
 					date_hh.innerHTML = itemStr;
